@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.adobe.nativeExtensions.maps.Map"/>
+    <classEntry path="com.adobe.nativeExtensions.maps.LatLng"/>
+    <classEntry path="com.adobe.nativeExtensions.maps.MapEvent"/>
+    <classEntry path="com.adobe.nativeExtensions.maps.overlays.Marker"/>
+    <classEntry path="com.adobe.nativeExtensions.maps.MapType"/>
+    <classEntry path="com.adobe.nativeExtensions.maps.overlays.MarkerStyles"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
