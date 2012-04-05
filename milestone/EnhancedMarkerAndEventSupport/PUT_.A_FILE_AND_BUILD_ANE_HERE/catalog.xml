@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding ="utf-8"?>
+<swc xmlns="http://www.adobe.com/flash/swccatalog/9">
+  <versions>
+    <swc version="1.2" />
+    <flex version="4.6.0" build="23201" minimumSupportedVersion="3.0.0" />
+  </versions>
+  <features>
+    <feature-script-deps />
+    <feature-files />
+  </features>
+  <libraries>
+    <library path="library.swf">
+      <script name="com/adobe/nativeExtensions/maps/overlays/MarkerStyles" mod="1330699771414" signatureChecksum="1416253333" >
+        <def id="com.adobe.nativeExtensions.maps.overlays:MarkerStyles" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="Object" type="i" /> 
+      </script>
+      <script name="com/adobe/nativeExtensions/maps/overlays/Marker" mod="1331647922487" signatureChecksum="3323880659" >
+        <def id="com.adobe.nativeExtensions.maps.overlays:Marker" /> 
+        <dep id="com.adobe.nativeExtensions.maps.overlays:MarkerStyles" type="e" /> 
+        <dep id="com.adobe.nativeExtensions.maps:LatLng" type="s" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="Object" type="i" /> 
+      </script>
+      <script name="_5ada18112b0cbae9fb91844c1504eee22c1fe60fc93f2283175062e345ad348e_flash_display_Sprite" mod="1332164113832" signatureChecksum="2383968871" >
+        <def id="_5ada18112b0cbae9fb91844c1504eee22c1fe60fc93f2283175062e345ad348e_flash_display_Sprite" /> 
+        <dep id="flash.system:Security" type="e" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="flash.display:Sprite" type="i" /> 
+      </script>
+      <script name="com/adobe/nativeExtensions/maps/MapType" mod="1330699761426" signatureChecksum="3887350969" >
+        <def id="com.adobe.nativeExtensions.maps:MapType" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="Object" type="i" /> 
+      </script>
+      <script name="com/adobe/nativeExtensions/maps/Map" mod="1332163029102" signatureChecksum="1258945071" >
+        <def id="com.adobe.nativeExtensions.maps:Map" /> 
+        <dep id="trace" type="e" /> 
+        <dep id="__AS3__.vec:Vector" type="e" /> 
+        <dep id="com.adobe.nativeExtensions.maps:MapEvent" type="e" /> 
+        <dep id="flash.geom:Rectangle" type="e" /> 
+        <dep id="flash.events:StatusEvent" type="e" /> 
+        <dep id="com.adobe.nativeExtensions.maps:LatLng" type="e" /> 
+        <dep id="flash.external:ExtensionContext" type="e" /> 
+        <dep id="com.adobe.nativeExtensions.maps.overlays:Marker" type="e" /> 
+        <dep id="Error" type="e" /> 
+        <dep id="flash.geom:Point" type="e" /> 
+        <dep id="flash.display:BitmapData" type="s" /> 
+        <dep id="__AS3__.vec:Vector" type="s" /> 
+        <dep id="flash.geom:Rectangle" type="s" /> 
+        <dep id="flash.events:StatusEvent" type="s" /> 
+        <dep id="com.adobe.nativeExtensions.maps:LatLng" type="s" /> 
+        <dep id="flash.external:ExtensionContext" type="s" /> 
+        <dep id="com.adobe.nativeExtensions.maps.overlays:Marker" type="s" /> 
+        <dep id="flash.geom:Point" type="s" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="flash.events:EventDispatcher" type="i" /> 
+      </script>
+      <script name="com/adobe/nativeExtensions/maps/LatLng" mod="1332148438876" signatureChecksum="1331185188" >
+        <def id="com.adobe.nativeExtensions.maps:LatLng" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="Object" type="i" /> 
+      </script>
+      <script name="com/adobe/nativeExtensions/maps/MapEvent" mod="1332164113495" signatureChecksum="1847401534" >
+        <def id="com.adobe.nativeExtensions.maps:MapEvent" /> 
+        <dep id="trace" type="e" /> 
+        <dep id="com.adobe.nativeExtensions.maps.overlays:Marker" type="e" /> 
+        <dep id="com.adobe.nativeExtensions.maps.overlays:Marker" type="s" /> 
+        <dep id="AS3" type="n" /> 
+        <dep id="flash.events:Event" type="i" /> 
+      </script>
+      <digests>
+        <digest type="SHA-256" signed="false" value="1b13cf79dc506bf1cb81c9fadd7d131e490858664621d058536c2241cee6a58f"   />
+      </digests>
+    </library>
+  </libraries>
+  <files>
+  </files>
+</swc>
