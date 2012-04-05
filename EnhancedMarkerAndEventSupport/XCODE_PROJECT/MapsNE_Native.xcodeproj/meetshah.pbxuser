@@ -1,0 +1,253 @@
+// !$*UTF8*$!
+{
+	02042D0B1398B9CD00F066F1 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	02042D0C1398B9CD00F066F1 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	02042D101398BA7800F066F1 /* MapNENativeMain.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1062, 610}}";
+			sepNavSelRange = "{638, 0}";
+			sepNavVisRange = "{0, 798}";
+		};
+	};
+	02042D111398BA7800F066F1 /* MapNENativeMain.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1062, 6227}}";
+			sepNavSelRange = "{7414, 0}";
+			sepNavVisRange = "{6919, 1326}";
+			sepNavWindowFrame = "{{183, 89}, {1614, 969}}";
+		};
+	};
+	02042D141398BAB000F066F1 /* FlashRuntimeExtensions.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1062, 8021}}";
+			sepNavSelRange = "{14855, 31}";
+			sepNavVisRange = "{2967, 1267}";
+			sepNavWindowFrame = "{{15, 86}, {1614, 969}}";
+		};
+	};
+	0262639313BCD66E00CE37D0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0262639413BCD66E00CE37D0 /* MKMapView.h */;
+		name = "MKMapView.h: 52";
+		rLen = 88;
+		rLoc = 1674;
+		rType = 0;
+		vrLen = 3045;
+		vrLoc = 6232;
+	};
+	0262639413BCD66E00CE37D0 /* MKMapView.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = MKMapView.h;
+		path = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/MapKit.framework/Headers/MKMapView.h;
+		sourceTree = "<absolute>";
+	};
+	026263A113BCDB4B00CE37D0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 026263A213BCDB4B00CE37D0 /* CLLocation.h */;
+		name = "CLLocation.h: 19";
+		rLen = 34;
+		rLoc = 409;
+		rType = 0;
+		vrLen = 1123;
+		vrLoc = 0;
+	};
+	026263A213BCDB4B00CE37D0 /* CLLocation.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = CLLocation.h;
+		path = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreLocation.framework/Headers/CLLocation.h;
+		sourceTree = "<absolute>";
+	};
+	026263A313BCDB4B00CE37D0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 026263A413BCDB4B00CE37D0 /* MKGeometry.h */;
+		name = "MKGeometry.h: 17";
+		rLen = 20;
+		rLoc = 289;
+		rType = 0;
+		vrLen = 1410;
+		vrLoc = 0;
+	};
+	026263A413BCDB4B00CE37D0 /* MKGeometry.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = MKGeometry.h;
+		path = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/MapKit.framework/Headers/MKGeometry.h;
+		sourceTree = "<absolute>";
+	};
+	026263B113BE0EA200CE37D0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 026263B213BE0EA200CE37D0 /* aot_meet.ksh */;
+		name = "aot_meet.ksh: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1648;
+		vrLoc = 7235;
+	};
+	026263B213BE0EA200CE37D0 /* aot_meet.ksh */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = aot_meet.ksh;
+		path = /Users/meetshah/Desktop/ATSiPhone/NotusAOT/bin/aot_meet.ksh;
+		sourceTree = "<absolute>";
+	};
+	026264EF13DE960400CE37D0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 02042D101398BA7800F066F1 /* MapNENativeMain.h */;
+		name = "MapNENativeMain.h: 30";
+		rLen = 0;
+		rLoc = 638;
+		rType = 0;
+		vrLen = 798;
+		vrLoc = 0;
+	};
+	026264F013DE960400CE37D0 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 02042D141398BAB000F066F1 /* FlashRuntimeExtensions.h */;
+		name = "FlashRuntimeExtensions.h: 470";
+		rLen = 31;
+		rLoc = 14855;
+		rType = 0;
+		vrLen = 1267;
+		vrLoc = 2967;
+	};
+	0263E37113AA8B5A00890CE3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0263E37213AA8B5A00890CE3 /* CGGeometry.h */;
+		name = "CGGeometry.h: 14";
+		rLen = 7;
+		rLoc = 251;
+		rType = 0;
+		vrLen = 867;
+		vrLoc = 0;
+	};
+	0263E37213AA8B5A00890CE3 /* CGGeometry.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = CGGeometry.h;
+		path = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CGGeometry.h;
+		sourceTree = "<absolute>";
+	};
+	0263E37313AA8B5A00890CE3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 0263E37413AA8B5A00890CE3 /* CGBase.h */;
+		name = "CGBase.h: 89";
+		rLen = 30;
+		rLoc = 2449;
+		rType = 0;
+		vrLen = 1334;
+		vrLoc = 1195;
+	};
+	0263E37413AA8B5A00890CE3 /* CGBase.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = CGBase.h;
+		path = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS4.3.sdk/System/Library/Frameworks/CoreGraphics.framework/Headers/CGBase.h;
+		sourceTree = "<absolute>";
+	};
+	026FC7BE1398E1F7001D6E61 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 026FC7BF1398E1F7001D6E61 /* MeetViewViewController.m */;
+		name = "MeetViewViewController.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1183;
+		vrLoc = 146;
+	};
+	026FC7BF1398E1F7001D6E61 /* MeetViewViewController.m */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.objc;
+		name = MeetViewViewController.m;
+		path = /Users/meetshah/Documents/MeetView/Classes/MeetViewViewController.m;
+		sourceTree = "<absolute>";
+	};
+	027F89C913EEC50D00BA2E0D /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 02042D111398BA7800F066F1 /* MapNENativeMain.m */;
+		name = "MapNENativeMain.m: 223";
+		rLen = 0;
+		rLoc = 7414;
+		rType = 0;
+		vrLen = 1326;
+		vrLoc = 6919;
+	};
+	02F6008D13EEC0A100D0BA6E /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 02042D111398BA7800F066F1 /* MapNENativeMain.m */;
+		name = "MapNENativeMain.m: 210";
+		rLen = 0;
+		rLoc = 7038;
+		rType = 0;
+		vrLen = 1614;
+		vrLoc = 7030;
+	};
+	0867D690FE84028FC02AAC07 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeSDKPreference = iphoneos4.3;
+		activeTarget = D2AAC07D0554694100DB518D /* MapsNE_Native */;
+		addToTargets = (
+			D2AAC07D0554694100DB518D /* MapsNE_Native */,
+		);
+		codeSenseManager = 02042D0C1398B9CD00F066F1 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					884,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 334413993;
+			PBXWorkspaceStateSaveDate = 334413993;
+		};
+		perUserProjectItems = {
+			0262639313BCD66E00CE37D0 /* PBXTextBookmark */ = 0262639313BCD66E00CE37D0 /* PBXTextBookmark */;
+			026263A113BCDB4B00CE37D0 /* PBXTextBookmark */ = 026263A113BCDB4B00CE37D0 /* PBXTextBookmark */;
+			026263A313BCDB4B00CE37D0 /* PBXTextBookmark */ = 026263A313BCDB4B00CE37D0 /* PBXTextBookmark */;
+			026263B113BE0EA200CE37D0 /* PBXTextBookmark */ = 026263B113BE0EA200CE37D0 /* PBXTextBookmark */;
+			026264EF13DE960400CE37D0 /* PBXTextBookmark */ = 026264EF13DE960400CE37D0 /* PBXTextBookmark */;
+			026264F013DE960400CE37D0 /* PBXTextBookmark */ = 026264F013DE960400CE37D0 /* PBXTextBookmark */;
+			0263E37113AA8B5A00890CE3 /* PBXTextBookmark */ = 0263E37113AA8B5A00890CE3 /* PBXTextBookmark */;
+			0263E37313AA8B5A00890CE3 /* PBXTextBookmark */ = 0263E37313AA8B5A00890CE3 /* PBXTextBookmark */;
+			026FC7BE1398E1F7001D6E61 /* PBXTextBookmark */ = 026FC7BE1398E1F7001D6E61 /* PBXTextBookmark */;
+			027F89C913EEC50D00BA2E0D /* PBXTextBookmark */ = 027F89C913EEC50D00BA2E0D /* PBXTextBookmark */;
+			02F6008D13EEC0A100D0BA6E /* PBXTextBookmark */ = 02F6008D13EEC0A100D0BA6E /* PBXTextBookmark */;
+		};
+		sourceControlManager = 02042D0B1398B9CD00F066F1 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	D2AAC07D0554694100DB518D /* MapsNE_Native */ = {
+		activeExec = 0;
+	};
+}

@@ -1,0 +1,1 @@
+/Applications/AdobeAIRSDK/bin/adt -package -target ipa-debug -connect 192.168.0.2 -storetype pkcs12 -keystore iphone_dev-prosjektlab.p12 -storepass YOUR-PASS -provisioning-profile testing.mobileprovision "test.ipa" "APPLE.xml" "NativeMapp.swf" -extdir ane -platformsdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS5.0.sdk/
