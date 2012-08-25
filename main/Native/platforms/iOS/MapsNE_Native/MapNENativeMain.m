@@ -7,268 +7,39 @@
 //
 
 #import "MapNENativeMain.h"
-#include "FlashRuntimeExtensions.h"
+#import "FlashRuntimeExtensions.h"
 #import <MapKit/MapKit.h>
 #import "QuartzCore/CAEAGLLayer.h"
-#include "MyCustomAnnotation.h"
 
-#define MERCATOR_OFFSET 268435456
-#define MERCATOR_RADIUS 85445659.44705395
+#import "MyCustomAnnotation.h"
+#import "MyCustomOverlay.h"
+#import "UtilityClass.h"
 
 // Objective-C code
 #import <UIKit/UIKit.h>
-id refToSelf;
-FREContext ctxRef=nil;
-float scaleFactor=1.0;
-NSMutableArray * annotationsArray=nil;
 
 @implementation MapNENativeMain
-
-@synthesize mapView,applicationView;
-
-//Sets the viewPort i.e the bounds of the map View
--(void)setViewPort:(CGRect)frame
-{
-	[mapView setFrame:frame];
-}
-//Returns the viewPort i.e the bounds of the map View
--(CGRect)getViewPort
-{
-	return mapView.frame;
-}
-//Adds the mapView onto the main View root View Controller
--(void)showMap
-{
-	NSLog(@"*******************In showMapView function********************");
-	if([mapView superview]==nil)
-	{
-		NSLog(@"Adding a Map View");
-		[applicationView addSubview:mapView];
-	}
-}
-
-//Removes the mapView from the main View root View Controller
--(void)hideMap
-{	
-	NSLog(@"*******************In hideMapView function********************");
-	if([mapView superview]!=nil)
-	{
-		NSLog(@"Removing a Map View");
-		[mapView removeFromSuperview];
-	}
-	
-}
--(void)showUserLocation{
-	mapView.showsUserLocation=YES;
-}
--(void)panTo:(CLLocationCoordinate2D)newCenter{
-	[mapView setCenterCoordinate:newCenter animated:YES];
-}
--(void)setZoom:(MKCoordinateRegion)newRegion{
-	
-	MKCoordinateRegion rtf=[mapView regionThatFits:newRegion];
-	NSLog([NSString stringWithFormat:@"Coordinate that fits :%f %f",rtf.span.latitudeDelta,rtf.span.longitudeDelta]);
-	
-	[mapView setRegion:newRegion animated:YES];	
-}
-
--(double)getZoom{
-	//return mapView.region.span;
-	double z=[refToSelf zoomFromSpan:[[refToSelf mapView] region].span];
-	return z;
-}
--(void)setMapCenter:(CLLocationCoordinate2D)newCenter
-{
-	[mapView setCenterCoordinate:newCenter animated:YES];
-}
--(CLLocationCoordinate2D)getMapCenter
-{
-	return [mapView centerCoordinate];
-}
-
-//MKMapView Delegate Event Handlers:
--(void)mapViewWillStartLoadingMap:(MKMapView *)mapView
-{
-	NSLog(@"Loading Map");
-	FREDispatchStatusEventAsync(ctxRef, (const uint8_t *)"WillStartLoadingMap", (const uint8_t*)"");
-}
--(void)mapViewDidFinishLoadingMap:(MKMapView *)mapView
-{
-	NSLog(@"Map Loading Finished");
-	FREDispatchStatusEventAsync(ctxRef, (const uint8_t *)"DidFinishLoadingMap", (const uint8_t*)"");	
-}
--(void)mapViewDidFailLoadingMap:(MKMapView *)mapView withError:(NSError *)error
-{
-	NSLog(@"Error Loading Map");
-	FREDispatchStatusEventAsync(ctxRef, (const uint8_t *)"DidFailLoadingMap", (const uint8_t*)"");
-}
-
-//Annotation Event handlers
--(MKAnnotationView *)mapView:(MKMapView *)mapViewLocal viewForAnnotation:(id<MKAnnotation>)annotation
-{
-        if([annotation isKindOfClass:[MKUserLocation class]])
-            return nil;
-        
-        MKPinAnnotationView* pinView=(MKPinAnnotationView*)[mapViewLocal dequeueReusableAnnotationViewWithIdentifier:@"CustomPinAnnotation"];
-        if(!pinView)
-        {
-            NSLog(@"Got from dequeue");
-            pinView=[[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"CustomPinAnnotation"] autorelease];
-        }
-        else
-        {
-            NSLog(@"Didnt got");
-            pinView.annotation=annotation;
-        }
-        pinView.pinColor=[((MyCustomAnnotation*)annotation) markerPinColor];
-        pinView.canShowCallout=YES;
-        NSLog(@"Returning PinView %d",[((MyCustomAnnotation*)annotation) markerPinColor]);
-        return pinView;
-}
-
-
-
-//Helper methods for mapping the google Maps zoomLevel to iOS MKCordinateSpan
-- (double)longitudeToPixelSpaceX:(double)longitude
-{
-    return round(MERCATOR_OFFSET + MERCATOR_RADIUS * longitude * M_PI / 180.0);
-}
-
-- (double)latitudeToPixelSpaceY:(double)latitude
-{
-    return round(MERCATOR_OFFSET - MERCATOR_RADIUS * logf((1 + sinf(latitude * M_PI / 180.0)) / (1 - sinf(latitude * M_PI / 180.0))) / 2.0);
-}
-
-- (double)pixelSpaceXToLongitude:(double)pixelX
-{
-    return ((round(pixelX) - MERCATOR_OFFSET) / MERCATOR_RADIUS) * 180.0 / M_PI;
-}
-
-- (double)pixelSpaceYToLatitude:(double)pixelY
-{
-    return (M_PI / 2.0 - 2.0 * atan(exp((round(pixelY) - MERCATOR_OFFSET) / MERCATOR_RADIUS))) * 180.0 / M_PI;
-	
-}
-- (MKCoordinateSpan)coordinateSpanWithMapView:(MKMapView *)mapViewLocal
-							 centerCoordinate:(CLLocationCoordinate2D)centerCoordinate
-								 andZoomLevel:(NSUInteger)zoomLevel
-{
-    // convert center coordiate to pixel space
-    double centerPixelX = [self longitudeToPixelSpaceX:centerCoordinate.longitude];
-    double centerPixelY = [self latitudeToPixelSpaceY:centerCoordinate.latitude];
-    
-    // determine the scale value from the zoom level
-    NSInteger zoomExponent = 20 - zoomLevel;
-    double zoomScale = pow(2, zoomExponent);
-    
-    // scale the map’s size in pixel space
-    CGSize mapSizeInPixels = mapViewLocal.bounds.size;
-    double scaledMapWidth = mapSizeInPixels.width * zoomScale;
-    double scaledMapHeight = mapSizeInPixels.height * zoomScale;
-    
-    // figure out the position of the top-left pixel
-    double topLeftPixelX = centerPixelX - (scaledMapWidth / 2);
-    double topLeftPixelY = centerPixelY - (scaledMapHeight / 2);
-    
-    // find delta between left and right longitudes
-    CLLocationDegrees minLng = [self pixelSpaceXToLongitude:topLeftPixelX];
-    CLLocationDegrees maxLng = [self pixelSpaceXToLongitude:topLeftPixelX + scaledMapWidth];
-    CLLocationDegrees longitudeDelta = maxLng - minLng;
-    
-    // find delta between top and bottom latitudes
-    CLLocationDegrees minLat = [self pixelSpaceYToLatitude:topLeftPixelY];
-    CLLocationDegrees maxLat = [self pixelSpaceYToLatitude:topLeftPixelY + scaledMapHeight];
-    CLLocationDegrees latitudeDelta = -1 * (maxLat - minLat);
-    
-    // create and return the lat/lng span
-    MKCoordinateSpan span = MKCoordinateSpanMake(latitudeDelta, longitudeDelta);
-    return span;
-}
--(double)zoomFromSpan:(MKCoordinateSpan)mapSpan
-{
-	CGPoint topLeftPt;topLeftPt.x=0;topLeftPt.y=0;
-	CLLocationCoordinate2D topLeftCoordinate=[mapView convertPoint:topLeftPt toCoordinateFromView:mapView];
-	
-	NSLog(@"%f %f top Left",topLeftCoordinate.latitude,topLeftCoordinate.longitude);
-	
-	CGPoint bottomRightPt;bottomRightPt.x=mapView.bounds.size.width;bottomRightPt.y=mapView.bounds.size.height;
-	CLLocationCoordinate2D bottomRightCoordinate=[mapView convertPoint:bottomRightPt toCoordinateFromView:mapView];
-	
-	NSLog(@"%f %f bottom right",bottomRightCoordinate.latitude,bottomRightCoordinate.longitude);
-	
-	double leftPixelX=[self longitudeToPixelSpaceX:topLeftCoordinate.longitude];
-	double rightPixelX=[self longitudeToPixelSpaceX:bottomRightCoordinate.longitude];
-	double scaledMapWidth=rightPixelX-leftPixelX;
-	
-	double topPixelY=[self latitudeToPixelSpaceY:topLeftCoordinate.latitude];
-	double bottomPixelY=[self latitudeToPixelSpaceY:bottomRightCoordinate.latitude];
-	double scaledMapHeight=topPixelY-bottomPixelY;
-	
-	double zoomScale=scaledMapWidth / mapView.bounds.size.width;
-	double zoomScaleVerify=-1 * (scaledMapHeight / mapView.bounds.size.height);
-	NSLog(@"%f %f zoom and verify",zoomScale, zoomScaleVerify);
-	
-	double zoomExponent=logf(zoomScale)/logf(2.0f);
-	double zoomLevel=20-zoomExponent;
-	NSLog(@"%f %f Exponent and Level",zoomExponent,zoomLevel);
-	
-	return zoomLevel;
-	
-}
-
-/************* Code for creating bitmap graphics context****************************/
-CGContextRef MyCreateBitmapContext (int pixelsWide,int pixelsHigh)
-{
-    CGContextRef    context = NULL;
-    CGColorSpaceRef colorSpace;
-    void *          bitmapData;
-    int             bitmapByteCount;
-    int             bitmapBytesPerRow;
-    
-    bitmapBytesPerRow   = (pixelsWide * 4);// 1
-    bitmapByteCount     = (bitmapBytesPerRow * pixelsHigh);
-    
-    colorSpace = CGColorSpaceCreateDeviceRGB();
-    bitmapData = malloc( bitmapByteCount);// 3
-    memset(bitmapData, 0, sizeof(bitmapData));
-    if (bitmapData == NULL)
-    {
-        fprintf (stderr, "Memory not allocated!");
-        return NULL;
-    }
-    context = CGBitmapContextCreate (bitmapData,// 4
-                                     pixelsWide,
-                                     pixelsHigh,
-                                     8,      // bits per component
-                                     bitmapBytesPerRow,
-                                     colorSpace,
-                                     kCGImageAlphaPremultipliedLast);
-    if (context== NULL)
-    {
-        free (bitmapData);// 5
-        fprintf (stderr, "Context not created!");
-        return NULL;
-    }
-    CGColorSpaceRelease( colorSpace );// 6
-    
-    return context;// 7
-}
+@synthesize applicationView,mapWrap;
 @end
 
 
+MapNENativeMain* refToSelf;
+FREContext ctxRef=nil;
+float scaleFactor=1.0;
 
+FREContext getContext2(){
+    return ctxRef;
+}
 
 // Creates a Map View Object
 FREObject createMapViewHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
-	
-	
 	NSLog(@"*******************In createMapViewHandler function********************");
-	CGRect frame=CGRectMake(50, 50, 300,300);
-	
-    //Create a MKMapView Object
-	MKMapView *aView=[[MKMapView alloc] initWithFrame:frame];
-    aView.delegate=refToSelf;
-	[refToSelf setMapView:aView];
+    
+    [refToSelf setMapWrap:[[MapWrapper alloc] init]];
+    [[refToSelf mapWrap] initWithDefaultFrame];
+    [[refToSelf mapWrap] setParentView:[refToSelf applicationView]];
+    //[refToSelf mapView].showsUserLocation=true;
+    
 	return NULL;
 }
 
@@ -276,7 +47,7 @@ FREObject createMapViewHandler(FREContext ctx, void* funcData, uint32_t argc, FR
 FREObject showMapViewHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"*******************In showMapViewHandler function********************");
 	
-	[refToSelf showMap];
+	[[refToSelf mapWrap] showMap];
 	return NULL;
 }
 
@@ -284,14 +55,14 @@ FREObject showMapViewHandler(FREContext ctx, void* funcData, uint32_t argc, FREO
 FREObject hideMapViewHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"*******************In hideMapViewHandler function********************");
 	
-	[refToSelf hideMap];
+	[[refToSelf mapWrap] hideMap];
 	return NULL;
 }
 
 // Returns the bounds of Map View in pixel coordinates
 FREObject getViewPortHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"*******************In getViewPortHandler function********************");
-	CGRect frame=[refToSelf getViewPort];
+	CGRect frame=[[refToSelf mapWrap] getViewPort];
 	
 	NSLog(@"*******************Constructing Rectangle FRE Object from native CGRect*****************");
 	FREObject* argV=(FREObject*)malloc(sizeof(FREObject)*4);
@@ -303,7 +74,7 @@ FREObject getViewPortHandler(FREContext ctx, void* funcData, uint32_t argc, FREO
 	
 	int i= FRENewObject((const uint8_t*)"flash.geom.Rectangle",4,argV,&returnObject,NULL);
 	if (i!=FRE_OK) {
-		NSLog([NSString stringWithFormat:@"Call to FRENewObject reply value is %d",i]);
+		NSLog(@"Call to FRENewObject reply value is %d",i);
 	}
 	return returnObject;
 }
@@ -330,13 +101,13 @@ FREObject setViewPortHandler(FREContext ctx, void* funcData, uint32_t argc, FREO
 	FREGetObjectAsDouble(y, &d2);frame.origin.y=d2/scaleFactor;	
 	FREGetObjectAsDouble(width, &d3);frame.size.width=d3/scaleFactor;
 	FREGetObjectAsDouble(height, &d4);frame.size.height=d4/scaleFactor;
-	[refToSelf setViewPort:frame];
+	[[refToSelf mapWrap] setViewPort:frame];
 	return NULL;
 }
 
 FREObject getCenterHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"*******************In getCenterHandler function********************");
-	CLLocationCoordinate2D mapCenter=[refToSelf getMapCenter];
+	CLLocationCoordinate2D mapCenter=[[refToSelf mapWrap] getMapCenter];
 	
 	
 	NSLog(@"*******************Constructing Custom LatLng FRE Object from native CGRect*****************");
@@ -370,7 +141,7 @@ FREObject setCenterHandler(FREContext ctx, void* funcData, uint32_t argc, FREObj
 	FREGetObjectAsDouble(lat, &nlat);newCenter.latitude=nlat;
 	FREGetObjectAsDouble(lng, &nlng);newCenter.longitude=nlng;
 	
-	[refToSelf setMapCenter:newCenter];
+	[[refToSelf mapWrap] setMapCenter:newCenter];
 	
 	return NULL;
 	
@@ -392,7 +163,7 @@ FREObject panToHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject 
 	FREGetObjectAsDouble(lat, &nlat);newCenter.latitude=nlat;
 	FREGetObjectAsDouble(lng, &nlng);newCenter.longitude=nlng;
 	
-	[refToSelf panTo:newCenter];
+	[[refToSelf mapWrap] panTo:newCenter];
 	return NULL;
 	
 }
@@ -405,7 +176,7 @@ FREObject getZoomHandler(FREContext ctx, void* funcData, uint32_t argc, FREObjec
 	FREObject returnObject;
 	
 	//Both latitude and longitude are same for this NE so return any of them
-	FRENewObjectFromDouble([refToSelf getZoom], &returnObject);
+	FRENewObjectFromDouble([[refToSelf mapWrap] getZoom], &returnObject);
 	return returnObject;
 	
 }
@@ -422,19 +193,20 @@ FREObject setZoomHandler(FREContext ctx, void* funcData, uint32_t argc, FREObjec
 	
 	newZoomNative = MIN(newZoomNative, 28);
     
+    MKMapView *tempMapView=[[refToSelf mapWrap] mapView];
     // use the zoom level to compute the region
-    MKCoordinateSpan span = [refToSelf coordinateSpanWithMapView:[refToSelf mapView] centerCoordinate:[[refToSelf mapView] centerCoordinate] andZoomLevel:newZoomNative];
-    MKCoordinateRegion newRegion = MKCoordinateRegionMake([refToSelf mapView].region.center, span);
+    MKCoordinateSpan span = [UtilityClass coordinateSpanWithMapView:tempMapView centerCoordinate:[tempMapView centerCoordinate] andZoomLevel:newZoomNative];
+    MKCoordinateRegion newRegion = MKCoordinateRegionMake(tempMapView.region.center, span);
 	
 	NSLog(@"Setting new Zoom to %f",newZoomNative);
 	
-	[refToSelf setZoom:newRegion];
+	[[refToSelf mapWrap] setZoom:newRegion];
 
 	return NULL;
 }
 
 
-FREObject addOverlayHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+FREObject addAnnotationHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"*******************In addOverlayHandler function********************");
     
     NSLog(@"*******************Coverting Marker object to native Annotation Object*********************");
@@ -460,7 +232,7 @@ FREObject addOverlayHandler(FREContext ctx, void* funcData, uint32_t argc, FREOb
 	FRECallObjectMethod(latLng, (const uint8_t*)"lng",0,nil, &lng, NULL);
     
     MyCustomAnnotation *annotation1= [MyCustomAnnotation alloc];
-    [annotation1 initWithId:myAsId];
+
     CLLocationCoordinate2D annLocation1;
     FREGetObjectAsDouble(lat, &(annLocation1.latitude));
 	FREGetObjectAsDouble(lng, &(annLocation1.longitude));
@@ -470,9 +242,9 @@ FREObject addOverlayHandler(FREContext ctx, void* funcData, uint32_t argc, FREOb
     FREGetObjectAsUTF8(title, &titleLength, &titleN);
     FREGetObjectAsUTF8(subtitle, &subtitleLength, &subtitleN);
     
+    [annotation1 initWithId:myAsId andTitle:[NSString stringWithFormat:@"%s",titleN] andSubtitle:[NSString stringWithFormat:@"%s",subtitleN]];
     [annotation1 setCoordinate:annLocation1];
-    [annotation1 setTitle:[NSString stringWithFormat:@"%s",titleN]];
-    [annotation1 setSubtitle:[NSString stringWithFormat:@"%s",subtitleN]];
+
     NSLog(@"Creating Marker with color %d",pinColor);
     if(pinColor==0)
         [annotation1 setMarkerPinColor:MKPinAnnotationColorRed];
@@ -482,30 +254,84 @@ FREObject addOverlayHandler(FREContext ctx, void* funcData, uint32_t argc, FREOb
         [annotation1 setMarkerPinColor:MKPinAnnotationColorPurple];
     else
         pinColor=MKPinAnnotationColorRed;
-	[[refToSelf mapView] addAnnotation:annotation1];
-    [annotationsArray addObject:annotation1];
+	[[refToSelf mapWrap] addMarkerAnnotation:annotation1];
 	
 	return NULL;
 }
 
-FREObject removeOverlayHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+FREObject removeAnnotationHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"*******************In removeOverlayHandler function********************");
     FREObject my_Id;
     int32_t myAsId;
-    MyCustomAnnotation *abc=NULL;
+    
     FREGetObjectProperty(argv[0], (const uint8_t*)"myId", &my_Id, NULL);
     FREGetObjectAsInt32(my_Id,&myAsId);
-	for(int i=0;i<[annotationsArray count];i++)
-    {
-        abc=[annotationsArray objectAtIndex:i];
-        if([abc myId]==myAsId)
-        {
-            [annotationsArray removeObject:abc];
-            NSLog(@"Element Removed with Id %d",i);
-            [[refToSelf mapView]removeAnnotation:abc];
-            break;
-        }
+	[[refToSelf mapWrap] removeMarkerAnnotationWithMarkerID:myAsId];
+    
+	return NULL;
+}
+
+FREObject addPolylineHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"*******************In addPolylineHandler function********************");
+    
+    NSLog(@"*******************Coverting Polyline AS object to native MKPolyline Object*********************");
+    
+    FREObject pointsArray,my_Id;
+//    FREObject fillColor;
+    int32_t myAsId;
+//    int32_t intColor;
+    //MKPinAnnotationColor pinColor;
+    FREGetObjectProperty(argv[0], (const uint8_t*)"myId", &my_Id, NULL);
+    FREGetObjectProperty(argv[0], (const uint8_t*)"points", &pointsArray, NULL);
+//    FREGetObjectProperty(argv[0], (const uint8_t*)"fillColor", &fillColor, NULL);
+//    FREGetObjectAsInt32(fillColor,&intColor);
+//    pinColor=(MKPinAnnotationColor)intColor;
+    FREGetObjectAsInt32(my_Id,&myAsId);
+    
+    uint32_t pointsArrayLength=0;
+    FREGetArrayLength(pointsArray, &pointsArrayLength);
+    
+    CLLocationCoordinate2D * nativePointsArray=malloc(sizeof(CLLocationCoordinate2D)*pointsArrayLength);
+    
+    NSLog(@"%d is the value",pointsArrayLength);
+    FREObject tempPoint;
+    for (uint32_t i=0; i<pointsArrayLength; i++) {
+        FREGetArrayElementAt(pointsArray, i, &tempPoint);
+        FREObject lat;
+        FREObject lng;
+        if(FRECallObjectMethod(tempPoint, (const uint8_t*)"lat",0,nil, &lat, NULL) != FRE_OK) NSLog(@"Error ");
+        if(FRECallObjectMethod(tempPoint, (const uint8_t*)"lng",0,nil, &lng, NULL) != FRE_OK) NSLog(@"Error ");
+        FREGetObjectAsDouble(lat, &(nativePointsArray[i].latitude));
+        FREGetObjectAsDouble(lng, &(nativePointsArray[i].longitude));
+        NSLog(@"Coordinate %d is %f %f",i,nativePointsArray[i].latitude,nativePointsArray[i].longitude);
     }
+    
+    MyCustomOverlay * myOverlay=[MyCustomOverlay alloc];
+    [myOverlay polylineWithCoordinates:nativePointsArray count:pointsArrayLength andID:myAsId];
+    [[refToSelf mapWrap] addOverlayControl:myOverlay];
+
+//    NSLog(@"Creating Marker with color %d",pinColor);
+//    if(pinColor==0)
+//        [annotation1 setMarkerPinColor:MKPinAnnotationColorRed];
+//    else if(pinColor==1)
+//        [annotation1 setMarkerPinColor:MKPinAnnotationColorGreen];
+//    else if(pinColor==2)
+//        [annotation1 setMarkerPinColor:MKPinAnnotationColorPurple];
+//    else
+//        pinColor=MKPinAnnotationColorRed;
+//	[[refToSelf mapWrap] addMarkerAnnotation:annotation1];
+	
+	return NULL;
+}
+
+FREObject removePolylineHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+	NSLog(@"*******************In removeOverlayHandler function********************");
+    FREObject my_Id;
+    int32_t myAsId;
+    
+    FREGetObjectProperty(argv[0], (const uint8_t*)"myId", &my_Id, NULL);
+    FREGetObjectAsInt32(my_Id,&myAsId);
+	[[refToSelf mapWrap] removeOverlayControlWithOverlayID:myAsId];
     
 	return NULL;
 }
@@ -516,29 +342,27 @@ FREObject setMapTypeHandler(FREContext ctx, void* funcData, uint32_t argc, FREOb
 
     FREGetObjectAsInt32(argv[0],&mapType);
     if(mapType==0)
-        [[refToSelf mapView] setMapType:MKMapTypeStandard];
+        [[[refToSelf mapWrap] mapView] setMapType:MKMapTypeStandard];
     else if(mapType==1)
-        [[refToSelf mapView] setMapType:MKMapTypeSatellite];
+        [[[refToSelf mapWrap] mapView] setMapType:MKMapTypeSatellite];
     else if(mapType==2)
-        [[refToSelf mapView] setMapType:MKMapTypeHybrid];
+        [[[refToSelf mapWrap] mapView] setMapType:MKMapTypeHybrid];
 	return NULL;
 }
 
 FREObject drawViewPortToBitmapDataHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
 	NSLog(@"*******************In drawViewPortToBitmapDataHandler function********************");
     
-    
-    
     /*capture screenshot of mapview*/
-    UIGraphicsBeginImageContextWithOptions([refToSelf mapView].bounds.size, YES, scaleFactor);
-    [[refToSelf mapView].layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIGraphicsBeginImageContextWithOptions([[refToSelf mapWrap] mapView].bounds.size, YES, scaleFactor);
+    [[[refToSelf mapWrap] mapView].layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image=UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     NSLog(@"mapview captured onto image");
     
     /*Create a BitmapContext for holding the image data*/
     CGImageRef cgImageRef=[image CGImage];
-    CGContextRef myBitmapContext = MyCreateBitmapContext (CGImageGetWidth(cgImageRef) ,CGImageGetHeight(cgImageRef));
+    CGContextRef myBitmapContext = [UtilityClass createBitmapContext:CGImageGetWidth(cgImageRef):CGImageGetHeight(cgImageRef)];
     if(myBitmapContext==nil)
     {
         NSLog(@"Error no memory in context");
@@ -635,13 +459,81 @@ FREObject drawViewPortToBitmapDataHandler(FREContext ctx, void* funcData, uint32
 	return NULL;
 }
 
+//set user location to visible or not visibile
+FREObject showUserLocationHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"*******************In showUserLocationHandler function********************");
+    int32_t showMe;
+    
+    FREGetObjectAsInt32(argv[0],&showMe);
+    if(showMe==1)
+        [[refToSelf mapWrap] showUserLocation:YES];
+    else if(showMe==0)
+        [[refToSelf mapWrap] showUserLocation:NO];
+    return NULL;
+}
+
+// sets the zoom and location of the map to fit in a specified rectangle
+FREObject zoomToRectHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"*******************In zoomToRectHandler function********************");
+    
+    FREObject x;
+    FREObject y;
+    FREObject width;
+    FREObject height;
+    
+    FREGetObjectProperty(argv[0], (const uint8_t*)"x", &x, NULL);
+    FREGetObjectProperty(argv[0], (const uint8_t*)"y", &y, NULL);
+    FREGetObjectProperty(argv[0], (const uint8_t*)"width", &width, NULL);
+    FREGetObjectProperty(argv[0], (const uint8_t*)"height", &height, NULL);
+    
+    CLLocationCoordinate2D coord;
+    CLLocationCoordinate2D coord2;
+    
+    double d1,d2,d3,d4;
+    
+    FREGetObjectAsDouble(x, &d1);coord.latitude = d1;
+    FREGetObjectAsDouble(y, &d2);coord.longitude = d2;
+    FREGetObjectAsDouble(width, &d3);coord2.latitude = d3;
+    FREGetObjectAsDouble(height, &d4);coord2.longitude = d4;
+    
+    MKMapPoint mp1 = MKMapPointForCoordinate(coord);
+    MKMapPoint mp2 = MKMapPointForCoordinate(coord2);
+    
+    MKMapRect mr = MKMapRectMake (fmin(mp1.x, mp2.x),
+                                  fmin(mp1.y, mp2.y),
+                                  fabs(mp1.x - mp2.x),
+                                  fabs(mp1.y - mp2.y));
+    [[refToSelf mapWrap] zoomToRect:mr];
+    return NULL;
+}
+
+
+//opens the callout of the pin with the given id
+FREObject closeMarkerHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"*******************In closeMarkerHandler function********************");
+    int32_t ID;
+    
+    FREGetObjectAsInt32(argv[0],&ID);
+    [[refToSelf mapWrap] closeMarkerWithMarkerID:ID];
+    return NULL;
+}
+
+//opens the callout of the pin with the given id
+FREObject openMarkerHandler(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[]) {
+    NSLog(@"*******************In openMarkerHandler function********************");
+    int32_t ID;
+    
+    FREGetObjectAsInt32(argv[0],&ID);
+    [[refToSelf mapWrap] openMarkerWithMarkerID:ID];
+    return NULL;
+}
 
 // A native context instance is created
 void MapsExtensionContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, 
 						uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) {
 	NSLog(@"*******************In context Initializer********************");
-	*numFunctionsToTest = 14;
-	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction)*14);
+	*numFunctionsToTest = 20;
+	FRENamedFunction* func = (FRENamedFunction*)malloc(sizeof(FRENamedFunction)*20);
 	
 	func[0].name = (const uint8_t*)"createMapView";
 	func[0].functionData = NULL;
@@ -685,11 +577,11 @@ void MapsExtensionContextInitializer(void* extData, const uint8_t* ctxType, FREC
     
     func[10].name=(const uint8_t*)"addOverlay";
     func[10].functionData=NULL;
-    func[10].function=&addOverlayHandler;
+    func[10].function=&addAnnotationHandler;
 	
     func[11].name=(const uint8_t*)"removeOverlay";
     func[11].functionData=NULL;
-    func[11].function=&removeOverlayHandler;
+    func[11].function=&removeAnnotationHandler;
     
     func[12].name=(const uint8_t*)"setMapType";
     func[12].functionData=NULL;
@@ -699,13 +591,35 @@ void MapsExtensionContextInitializer(void* extData, const uint8_t* ctxType, FREC
     func[13].functionData=NULL;
     func[13].function=&drawViewPortToBitmapDataHandler;
     
+    func[14].name=(const uint8_t*)"showUserLocation";
+    func[14].functionData=NULL;
+    func[14].function=&showUserLocationHandler;
+    
+    func[15].name=(const uint8_t*)"zoomToRect";
+    func[15].functionData=NULL;
+    func[15].function=&zoomToRectHandler;
+    
+    func[16].name=(const uint8_t*)"openMarker";
+    func[16].functionData=NULL;
+    func[16].function=&openMarkerHandler;
+    
+    func[17].name=(const uint8_t*)"closeMarker";
+    func[17].functionData=NULL;
+    func[17].function=&closeMarkerHandler;
+    
+    func[18].name=(const uint8_t*)"addPolyline";
+    func[18].functionData=NULL;
+    func[18].function=&addPolylineHandler;
+	
+    func[19].name=(const uint8_t*)"removePolyline";
+    func[19].functionData=NULL;
+    func[19].function=&removePolylineHandler;
+    
 	*functionsToSet = func;
 	
 	//Initialize the Class which contains the feature implemetation and set refToSelf
 	MapNENativeMain * t = [[MapNENativeMain alloc] init];
     refToSelf = t;
-    
-    annotationsArray=[[NSMutableArray alloc] init];
     
 	//Set the Main application view into applicationView property of this class for further use in program
 	[refToSelf setApplicationView:[[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController].view];
@@ -745,8 +659,9 @@ CGPoint halfMe(CGPoint oldPt){
 // A native context instance is disposed
 void MapsExtensionContextFinalizer(FREContext ctx) {
 	NSLog(@"*******************In context finalizer********************");
-	[refToSelf mapView].delegate=nil;
-	[[refToSelf mapView] release];
+	[[refToSelf mapWrap] mapView].delegate=nil;
+	[[[refToSelf mapWrap] mapView] release];
+    [[refToSelf mapWrap] release];
 	[refToSelf release];
 	return;
 }

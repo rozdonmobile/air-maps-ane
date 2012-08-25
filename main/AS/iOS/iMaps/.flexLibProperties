@@ -7,6 +7,8 @@
     <classEntry path="com.adobe.nativeExtensions.maps.overlays.Marker"/>
     <classEntry path="com.adobe.nativeExtensions.maps.MapType"/>
     <classEntry path="com.adobe.nativeExtensions.maps.overlays.MarkerStyles"/>
+    <classEntry path="com.adobe.nativeExtensions.maps.overlays.Polyline"/>
+    <classEntry path="com.adobe.nativeExtensions.maps.overlays.PolylineOptions"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

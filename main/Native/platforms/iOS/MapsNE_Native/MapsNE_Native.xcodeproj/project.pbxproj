@@ -10,6 +10,12 @@
 		02042D121398BA7800F066F1 /* MapNENativeMain.h in Headers */ = {isa = PBXBuildFile; fileRef = 02042D101398BA7800F066F1 /* MapNENativeMain.h */; };
 		02042D131398BA7800F066F1 /* MapNENativeMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 02042D111398BA7800F066F1 /* MapNENativeMain.m */; };
 		02042D151398BAB000F066F1 /* FlashRuntimeExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 02042D141398BAB000F066F1 /* FlashRuntimeExtensions.h */; };
+		024B9F451536F23800140A15 /* MapWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 024B9F431536F23800140A15 /* MapWrapper.h */; };
+		024B9F461536F23800140A15 /* MapWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B9F441536F23800140A15 /* MapWrapper.m */; };
+		024B9F491536F46F00140A15 /* UtilityClass.h in Headers */ = {isa = PBXBuildFile; fileRef = 024B9F471536F46F00140A15 /* UtilityClass.h */; };
+		024B9F4A1536F46F00140A15 /* UtilityClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B9F481536F46F00140A15 /* UtilityClass.m */; };
+		024B9F521543073D00140A15 /* MyCustomOverlay.h in Headers */ = {isa = PBXBuildFile; fileRef = 024B9F501543073D00140A15 /* MyCustomOverlay.h */; };
+		024B9F531543073D00140A15 /* MyCustomOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 024B9F511543073D00140A15 /* MyCustomOverlay.m */; };
 		0262624213BA209000CE37D0 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0262624113BA209000CE37D0 /* QuartzCore.framework */; };
 		026FC7B11398E14C001D6E61 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 026FC7B01398E14C001D6E61 /* MapKit.framework */; };
 		02D6F942140FC5D200D6A6E7 /* MyCustomAnnotation.h in Headers */ = {isa = PBXBuildFile; fileRef = 02D6F940140FC5D200D6A6E7 /* MyCustomAnnotation.h */; };
@@ -22,6 +28,12 @@
 		02042D101398BA7800F066F1 /* MapNENativeMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapNENativeMain.h; sourceTree = "<group>"; };
 		02042D111398BA7800F066F1 /* MapNENativeMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapNENativeMain.m; sourceTree = "<group>"; };
 		02042D141398BAB000F066F1 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashRuntimeExtensions.h; sourceTree = "<group>"; };
+		024B9F431536F23800140A15 /* MapWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapWrapper.h; sourceTree = "<group>"; };
+		024B9F441536F23800140A15 /* MapWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapWrapper.m; sourceTree = "<group>"; };
+		024B9F471536F46F00140A15 /* UtilityClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityClass.h; sourceTree = "<group>"; };
+		024B9F481536F46F00140A15 /* UtilityClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityClass.m; sourceTree = "<group>"; };
+		024B9F501543073D00140A15 /* MyCustomOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCustomOverlay.h; sourceTree = "<group>"; };
+		024B9F511543073D00140A15 /* MyCustomOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCustomOverlay.m; sourceTree = "<group>"; };
 		0262624113BA209000CE37D0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		026FC7B01398E14C001D6E61 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		02D6F940140FC5D200D6A6E7 /* MyCustomAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCustomAnnotation.h; sourceTree = "<group>"; };
@@ -84,6 +96,12 @@
 				02042D141398BAB000F066F1 /* FlashRuntimeExtensions.h */,
 				02042D101398BA7800F066F1 /* MapNENativeMain.h */,
 				02042D111398BA7800F066F1 /* MapNENativeMain.m */,
+				024B9F431536F23800140A15 /* MapWrapper.h */,
+				024B9F441536F23800140A15 /* MapWrapper.m */,
+				024B9F471536F46F00140A15 /* UtilityClass.h */,
+				024B9F481536F46F00140A15 /* UtilityClass.m */,
+				024B9F501543073D00140A15 /* MyCustomOverlay.h */,
+				024B9F511543073D00140A15 /* MyCustomOverlay.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -107,6 +125,9 @@
 				02042D121398BA7800F066F1 /* MapNENativeMain.h in Headers */,
 				02042D151398BAB000F066F1 /* FlashRuntimeExtensions.h in Headers */,
 				02D6F942140FC5D200D6A6E7 /* MyCustomAnnotation.h in Headers */,
+				024B9F451536F23800140A15 /* MapWrapper.h in Headers */,
+				024B9F491536F46F00140A15 /* UtilityClass.h in Headers */,
+				024B9F521543073D00140A15 /* MyCustomOverlay.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,6 +186,9 @@
 			files = (
 				02042D131398BA7800F066F1 /* MapNENativeMain.m in Sources */,
 				02D6F943140FC5D200D6A6E7 /* MyCustomAnnotation.m in Sources */,
+				024B9F461536F23800140A15 /* MapWrapper.m in Sources */,
+				024B9F4A1536F46F00140A15 /* UtilityClass.m in Sources */,
+				024B9F531543073D00140A15 /* MyCustomOverlay.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

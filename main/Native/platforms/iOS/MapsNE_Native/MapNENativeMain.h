@@ -7,30 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <MapKit/MapKit.h>
+#import "MapWrapper.h"
 
-@interface MapNENativeMain : NSObject<MKMapViewDelegate> {
-	
-	MKMapView *mapView;
+@interface MapNENativeMain : NSObject {
+	MapWrapper *mapWrap;
 	UIView *applicationView;
 }
-
-
--(void)setViewPort:(CGRect)frame;
--(CGRect)getViewPort;
--(void)showMap;
--(void)hideMap;
--(void)showUserLocation;
--(void)panTo:(CLLocationCoordinate2D)newCenter;
--(void)setZoom:(MKCoordinateRegion)newRegion;
--(double)getZoom;
--(void)setMapCenter:(CLLocationCoordinate2D)newCenter;
--(CLLocationCoordinate2D)getMapCenter;
-
-
--(double)zoomFromSpan:(MKCoordinateSpan)mapSpan;
-
-@property(retain, nonatomic) MKMapView *mapView;
-@property(retain, nonatomic) UIView *applicationView;
-
+@property(retain, readwrite, nonatomic) UIView *applicationView;
+@property(retain, nonatomic) MapWrapper *mapWrap;
 @end
