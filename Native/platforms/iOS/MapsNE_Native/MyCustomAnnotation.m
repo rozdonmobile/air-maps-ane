@@ -11,11 +11,24 @@
 
 @implementation MyCustomAnnotation
 @synthesize myId,markerPinColor;
-@synthesize coordinate,title,subtitle;
--(void)initWithId:(int32_t)anyId
+@synthesize coordinate;
+
+-(void)initWithId:(int32_t)anyId andTitle:(NSString *)anyTitle andSubtitle:(NSString *)anySubtitle
 {
     myId=anyId;
     markerPinColor=MKPinAnnotationColorRed;
+    _title=[anyTitle retain];
+    _subtitle=[anySubtitle retain];
     NSLog(@"Assigining %d color by default",markerPinColor);
+}
+
+-(NSString *)title
+{
+    return _title;
+}
+
+-(NSString *)subtitle
+{
+    return _subtitle;
 }
 @end

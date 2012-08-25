@@ -1,6 +1,7 @@
 package com.adobe.nativeExtensions.maps
 {
 	import com.adobe.nativeExtensions.maps.overlays.Marker;
+	import com.adobe.nativeExtensions.maps.overlays.Polyline;
 	
 	import flash.display.BitmapData;
 	import flash.events.Event;
@@ -12,6 +13,7 @@ package com.adobe.nativeExtensions.maps
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	
+	[Event(name="mapevent_click", type="com.adobe.nativeExtensions.maps.MapMouseEvent")]
 	[Event(name="mapevent_tilesloadedpending", type="com.adobe.nativeExtensions.maps.MapEvent")]
 	[Event(name="mapevent_tilesloaded", type="com.adobe.nativeExtensions.maps.MapEvent")]
 	[Event(name="mapevent_maploaderror", type="com.adobe.nativeExtensions.maps.MapEvent")]
@@ -19,10 +21,16 @@ package com.adobe.nativeExtensions.maps
 	{
 		private var _visible:Boolean;
 		private var _viewPort:Rectangle;
+		private var _showUserLocation:Boolean;
+		private var _annotationsVector:Vector.<Marker>;
+		private var _overlaysVector:Vector.<Polyline>;
 		
-		private var	extContext:ExtensionContext=null;
+		private static var	extContext:ExtensionContext=null;
 		
-		
+		public static function getContext():ExtensionContext
+		{
+			return extContext; 
+		}
 		
 		public function Map()
 		{
@@ -35,11 +43,28 @@ package com.adobe.nativeExtensions.maps
 			//Setting the default properties
 			_viewPort=extContext.call("getViewPort") as Rectangle;
 			_visible=false;
+			_showUserLocation=false;
+			
+			_annotationsVector=new Vector.<Marker>();
+			_overlaysVector=new Vector.<Polyline>();
 		}
 		
 		private function tilesLoadingHandler(se:StatusEvent):void
 		{
-			if(se.code=="WillStartLoadingMap")
+			var _marker:Marker;
+			
+			trace("\tCode:",se.code,"\n\tLevel:",se.level);
+			if(se.code=="PIN_SELECTED")
+			{
+				_marker = getMarkerFromId( int(se.level) );
+				this.dispatchEvent(new MapMouseEvent(MapMouseEvent.MARKER_SELECT,_marker));
+			}
+			else if(se.code=="PIN_DESELECTED")
+			{
+				_marker = getMarkerFromId( int(se.level) );
+				this.dispatchEvent(new MapMouseEvent(MapMouseEvent.MARKER_DESELECT,_marker));
+			}
+			else if(se.code=="WillStartLoadingMap")
 			{
 				this.dispatchEvent(new MapEvent(MapEvent.TILES_LOADED_PENDING));
 				trace("Loading Tiles");
@@ -56,6 +81,25 @@ package com.adobe.nativeExtensions.maps
 			}
 			else
 				trace("Unrecognized Error got dispatched from Native Extnesion");
+		}
+		
+		private function getMarkerFromId(markerId:int):Marker
+		{
+			for each(var _marker:Marker in _annotationsVector) {
+				if (_marker.myId == markerId) {
+					return _marker;
+				}
+			}
+			return null;
+		}
+		private function getOverlayFromId(overlayId:int):Polyline
+		{
+			for each(var _polyline:Polyline in _overlaysVector) {
+				if (_polyline.myId == overlayId) {
+					return _polyline;
+				}
+			}
+			return null;
 		}
 		
 		
@@ -137,13 +181,39 @@ package com.adobe.nativeExtensions.maps
 			//Please contact me [meetshah at adobe.com] if you find a solution to this
 		}
 		
-		public function addOverlay(overlay:Marker):void
+		public function addOverlay(overlay:Object):void
 		{
-			extContext.call("addOverlay",overlay);
+			if(overlay is Marker)
+			{
+				_annotationsVector.push(overlay);
+				extContext.call("addOverlay",overlay);
+			}
+			else if(overlay is Polyline)
+			{
+				_overlaysVector.push(overlay);
+				extContext.call("addPolyline",overlay);
+			}
+			
 		}
-		public function removeOverlay(overlay:Marker):void
+		public function removeOverlay(overlay:Object):void
 		{
-			extContext.call("removeOverlay",overlay);
+			var overlayIndex:int;
+			if(overlay is Marker)
+			{
+				overlayIndex = _annotationsVector.indexOf(overlay);
+				if(overlayIndex > -1) {
+					_annotationsVector.slice(overlayIndex,1);
+					extContext.call("removeOverlay",overlay);
+				}
+			}
+			else if(overlay is Polyline)
+			{
+				overlayIndex = _overlaysVector.indexOf(overlay);
+				if(overlayIndex > -1) {
+					_overlaysVector.slice(overlayIndex,1);
+					extContext.call("removePolyline",overlay);
+				}
+			}
 		}
 		
 		public function setMapType(mapType:int):void
@@ -175,5 +245,21 @@ package com.adobe.nativeExtensions.maps
 			
 		}
 		
+		public function set showUserLocation(shouldShow:Boolean):void
+		{
+			_showUserLocation=shouldShow;
+			extContext.call("showUserLocation",shouldShow?1:0);
+		}
+		
+		public function get showUserLocation():Boolean
+		{
+			return _showUserLocation;
+		}
+		
+		public function zoomToRect(param1:LatLng,param2:LatLng):void
+		{
+			var _rect:Rectangle=new Rectangle(param1.lat(),param1.lng(),param2.lat(),param2.lng());
+			extContext.call("zoomToRect",_rect);
+		}
 	}
 }

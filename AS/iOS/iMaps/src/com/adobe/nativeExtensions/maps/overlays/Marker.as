@@ -1,6 +1,7 @@
 package com.adobe.nativeExtensions.maps.overlays
 {
 	import com.adobe.nativeExtensions.maps.LatLng;
+	import com.adobe.nativeExtensions.maps.Map;
 
 	public class Marker
 	{
@@ -22,6 +23,14 @@ package com.adobe.nativeExtensions.maps.overlays
 		public function get myId():int
 		{
 			return _myId;
+		}
+		public function openInfoWindow():void
+		{
+			Map.getContext().call("openMarker",myId);
+		}
+		public function closeInfoWindow():void
+		{
+			Map.getContext().call("closeMarker",myId);
 		}
 	}
 }

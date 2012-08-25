@@ -11,15 +11,15 @@
 
 @interface MyCustomAnnotation : NSObject<MKAnnotation> {
     CLLocationCoordinate2D coordinate;
-    NSString *title;
-    NSString *subtitle;
+    NSString * _title;
+    NSString * _subtitle;
     int32_t  myId;
     MKPinAnnotationColor markerPinColor;
 }
 @property(readonly,nonatomic) int32_t myId;
 @property(readwrite,nonatomic) MKPinAnnotationColor markerPinColor;
 @property(readwrite,nonatomic) CLLocationCoordinate2D coordinate;
-@property(retain,nonatomic) NSString * title;
-@property(retain,nonatomic) NSString * subtitle;
--(void)initWithId:(int32_t)anyId;
+-(void)initWithId:(int32_t)anyId andTitle:(NSString *)anyTitle andSubtitle:(NSString *)anySubtitle;
+-(NSString *)title;
+-(NSString *)subtitle;
 @end
