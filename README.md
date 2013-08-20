@@ -1,4 +1,4 @@
 air-maps-ane
 ============
 
-Native Extension for using Maps in Adobe AIR applications
+Cloned from https://code.google.com/p/air-maps-ane/
